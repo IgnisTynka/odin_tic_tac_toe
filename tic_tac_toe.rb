@@ -18,9 +18,10 @@ class Board
     def change_symbol(symbol, number)
         @board[number - 1] = symbol
     end
-    def is_winner?(symbol)
-        win = false
-        i = 0
+    def is_winner?(player_moves)
+        WINNING_COMBINATIONS.any? do |combination|
+            player_moves.include?(combination)
+        end
     end
 end
 
@@ -36,26 +37,26 @@ end
 
 board = Board.new
 player_one = Player.new("Player one", "X")
+player_one_moves = []
 player_two = Player.new("Player two", "O")
+player_two_moves = []
 board.draw
 puts $players
 
 win = false
 i = 0
 
-# until win || i == 9
-#     if i.even? 
-#         puts "#{player_one.name} choose field (1-9)"
-#         number = gets
-#         board.change_symbol(player_one.symbol, number[0].to_i)
-#         win = board.is_winner?(player_one.symbol)
-#     else
-#         puts "#{player_two.name} choose field (1-9)"
-#         number = gets
-#         board.change_symbol(player_two.symbol, number[0].to_i)
-#         win = board.is_winner?(player_two.symbol)  
-#     end
-#     board.draw   
-#     i +=1                
-# end
+until win || i == 9
+    if i.even? 
+        puts "#{player_one.name} choose field (1-9)"
+        number = gets.chomp.to_i
+        board.change_symbol(player_one.symbol, number)
+    else
+        puts "#{player_two.name} choose field (1-9)"
+        number = gets.chomp.to_i
+        board.change_symbol(player_two.symbol, number)
+    end
+    board.draw   
+    i +=1              
+end
 
