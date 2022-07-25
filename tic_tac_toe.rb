@@ -1,10 +1,13 @@
 class Board  
+    $player_move_id = 0
      WINNING_COMBINATIONS = [
          [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
          [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]
       ]
     def initialize
         @board = [1,2,3,4,5,6,7,8,9]
+        @player_one = Player.new("PlayerOne", "X")
+        @player_two = Player.new("PlayerTwo", "O")
     end
     def draw 
         puts <<-HEREDOC
@@ -15,8 +18,19 @@ class Board
          #{@board[6]} | #{@board[7]} | #{@board[8]} 
         HEREDOC
     end
-    def change_symbol(symbol, number)
-        @board[number - 1] = symbol
+    def change_symbol(number)
+        if @board[number - 1].to_s.match?(/[[:alpha:]]/)
+            return 
+        else 
+            if $player_move_id.even?
+                @board[number - 1] = @player_one.symbol
+                $player_moeve_id = 1
+            else
+                @board[number - 1] = @player_two.symbol
+                $player_moeve_id = 0
+            end
+        end
+            
     end
     def is_full?()
         @board.all? do |cell|
@@ -43,10 +57,12 @@ class Player
 end 
 
 game_board = Board.new
-player_one = Player.new("PlayerOne", "X")
-player_two = Player.new("PlayerTwo", "O")
 
-game_board.draw
 
-puts game_board.is_full?
+until game_board.is_full?
+    number = gets.chomp.to_i
+    game_board.change_symbol(number)
+    game_board.draw
+end
+
 
